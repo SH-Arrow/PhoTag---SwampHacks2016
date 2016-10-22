@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.control.ScrollPane;
 import javafx.geometry.Orientation;
 import javafx.stage.Stage;
 
@@ -44,27 +47,48 @@ public class Main extends Application //implements EventHandler<ActionEvent>
 
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
+        //Scene 1 Set Up
+        BorderPane firstPane = new BorderPane();
+        firstPane = firstPaneSetUp(firstPane);
+
+        scene1 = new Scene(firstPane, 760, 680);
+        scene1.getStylesheets().add(Main.class.getResource("PhotagStyleSheet.css").toExternalForm());
+
+        //Scene 2 Set Up
+        BorderPane secondPane = new BorderPane();
+        secondPane = secondPaneSetUp(secondPane);
+
+        scene2 = new Scene(secondPane, 760, 680);
+        scene2.getStylesheets().add(Main.class.getResource("PhotagStyleSheet.css").toExternalForm());
+
+        window.setScene(scene1);
+        window.setTitle("Photag - Intelligent Photo Organizational Tool");
+        window.show();
+    }
+
+    public BorderPane firstPaneSetUp(BorderPane fP)
+    {
         //Scene 1 Children
 
-            //top pane : stack
+        //top pane : stack
         Image preImg = new Image(getClass().getResourceAsStream("ptIcon.png"), 120, 120, true, true);
         ImageView previewer = new ImageView();
         previewer.setImage(preImg);
 
         //left pane : hbox
         Label welcomeLabel = new Label("WELCOME TO");
-        Label photagLabel1 = new Label("Photag");
+        Label photagLabel = new Label("Photag");
         welcomeLabel.setStyle("-fx-text-fill: #dee8f9; -fx-font-weight: bold;");
-        photagLabel1.setStyle("-fx-text-fill: #558AAB");
+        photagLabel.setStyle("-fx-text-fill: #558AAB");
 
-            //right pane : vbox
+        //right pane : vbox
         assignBtn = new Button("Assign Main Folder");
         assignBtn.setOnAction(e -> System.out.println("Opening directory chooser."));
 
         contBtn = new Button("Continue");
         contBtn.setOnAction(e -> {System.out.println("Continuing to directory."); window.setScene(scene2);});
 
-            //right pane subsection : hbox
+        //right pane subsection : hbox
         Label poweredByLabel = new Label("POWERED BY");
         poweredByLabel.setStyle("-fx-text-fill: #dee8f9; -fx-font-weight: bold; -fx-font-size: 10pt; -fx-padding: 10,0,0,0");
 
@@ -79,11 +103,10 @@ public class Main extends Application //implements EventHandler<ActionEvent>
 
         //First, section 2
         HBox fSec2 = new HBox(20);
-        fSec2.getChildren().addAll(welcomeLabel, photagLabel1);
+        fSec2.getChildren().addAll(welcomeLabel, photagLabel);
 
         //First, section 3
         VBox fSec3 = new VBox(10);
-//        Orientation.VERTICAL
 
         HBox subSection2 = new HBox();
         subSection2.getChildren().addAll(poweredByLabel, img);
@@ -102,51 +125,131 @@ public class Main extends Application //implements EventHandler<ActionEvent>
         HBox bottomPane = new HBox(10);
         bottomPane.getChildren().addAll(fSec2, fSec3);
 
-        BorderPane firstPane = new BorderPane();
-
-        firstPane.setMargin(fSec1, new Insets(20,20,0,20));
-        firstPane.setMargin(bottomPane, new Insets(20,20,0,20));
+        fP.setMargin(fSec1, new Insets(20,20,0,20));
+        fP.setMargin(bottomPane, new Insets(20,20,0,20));
 
         bottomPane.setMargin(fSec2, new Insets(30,20,20,20));
         bottomPane.setMargin(fSec3, new Insets(0,20,20,20));
 
-        firstPane.setCenter(fSec1);
+        fP.setCenter(fSec1);
 
-        firstPane.setBottom(bottomPane);
+        fP.setBottom(bottomPane);
 
+        return fP;
+    }
 
-
-        scene1 = new Scene(firstPane, 760, 680);
-        scene1.getStylesheets().add(Main.class.getResource("PhotagStyleSheet.css").toExternalForm());
-
+    public BorderPane secondPaneSetUp(BorderPane sP)
+    {
         //Scene 2 Children
-            //top pane : stack
-        Label photagLabel2 = new Label("Photag");
+        //top pane  left: stack
+        Label photagLabel = new Label("Photag");
+        photagLabel.setStyle("-fx-text-fill: #558AAB;");
 
-            //center pane : stack
+        //top pane right : stack
         backBtn1 = new Button("Back");
         backBtn1.setOnAction(e -> {System.out.println("Back to main page."); window.setScene(scene1);});
 
+        //top
+        Region reg = new Region();
+        HBox top = new HBox();
+        top.getChildren().addAll(photagLabel, reg, backBtn1);
+        top.setHgrow(reg, Priority.ALWAYS);
 
-        //Second, section 1
-        StackPane sSec1 = new StackPane();
-        sSec1.getChildren().addAll(photagLabel2);
+
+        //left pane : stack
+        StackPane left = new StackPane();
+        Image preImg = new Image(getClass().getResourceAsStream("ptIcon.png"), 120, 120, true, true);
+        ImageView previewer = new ImageView();
+        previewer.setImage(preImg);
+        left.setStyle("-fx-background-color: white");
+        left.getChildren().add(previewer);
+
+        //right pane : tableview
+        ScrollPane right = new ScrollPane();
+
+        //right pane subsection : table view
+
+            //stack sub
+            ObservableList<StackPane> list = getImagePreview();
+
+        TilePane tile = new TilePane();
+
+            for(StackPane stack: list)
+            {
+                tile.getChildren().add(stack);
+            }
+
+        tile.setPrefColumns(3);
+        tile.setHgap(10);
+        tile.setVgap(10);
+        tile.setPrefTileHeight(220);
+
+        right.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);    // Horizontal scroll bar
+        right.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);    // Vertical scroll bar
+        right.setContent(tile);
+        right.setBackground(Background.EMPTY);
+
+        //bottom pane : hbox
+        Label poweredByLabel = new Label("POWERED BY");
+        poweredByLabel.setStyle("-fx-text-fill: #dee8f9; -fx-font-weight: bold; -fx-font-size: 10pt; -fx-padding: 10,0,0,0");
+
+        Image logo = new Image(getClass().getResourceAsStream("clarifai_logo.png"), 100, 50, true, true);
+        ImageView img = new ImageView();
+        img.setImage(logo);
+        Region reg2 = new Region();
+        Region reg3 = new Region();
+        HBox bottom = new HBox();
+        bottom.getChildren().addAll(reg2, reg3, poweredByLabel, img);
+        bottom.setHgrow(reg2, Priority.ALWAYS);
+        bottom.setHgrow(reg3, Priority.ALWAYS);
+
 
         //Second, section 2
-        StackPane sSec2 = new StackPane();
-        sSec2.getChildren().addAll(backBtn1);
+        HBox center = new HBox();
 
-        BorderPane secondPane = new BorderPane();
-        secondPane.setTop(sSec1);
-        secondPane.setCenter(sSec2);
+        center.getChildren().addAll(left, right);
+        center.setHgrow(left, Priority.ALWAYS);
+        center.setHgrow(right, Priority.NEVER);
+        center.setMargin(left, new Insets(0,20,0,0));
 
-        scene2 = new Scene(secondPane, 760, 680);
+        sP.setMargin(top, new Insets(20,20,20,20));
+        sP.setMargin(center, new Insets(20,20,20,20));
+        sP.setMargin(bottom, new Insets(20,20,20,20));
 
-        window.setScene(scene1);
-        window.setTitle("Photag - Intelligent Photo Organizational Tool");
-        window.show();
+        sP.setTop(top);
+        sP.setCenter(center);
+        sP.setBottom(bottom);
+        return sP;
     }
 
+    public ObservableList<StackPane> getImagePreview()
+    {
+        ObservableList<StackPane> stackList = FXCollections.observableArrayList();
+
+        //for now we are doing 6 instances
+        for(int i = 0; i < 16; i++)
+        {
+            StackPane subImgLabel = new StackPane();
+            Label tag = new Label("Tag");
+
+            tag.setStyle("-fx-background-color: #558AAB;\n" +
+                    "    -fx-text-fill: #dee8f9;\n" +
+                    "    -fx-font-size: 16pt;\n" +
+                    "    -fx-font-family: \"Helvetica Neue\";" +
+                    "    -fx-background-radius: 30%;" +
+                    "    -fx-background-insets: -5, -10, -10, -5;");
+            ImageView image = new ImageView(new Image(getClass().getResourceAsStream("ptIcon.png"), 120, 120, true, true));
+            image.setFitHeight(220);
+            image.setFitWidth(120);
+
+            subImgLabel.getChildren().add(image);
+            subImgLabel.getChildren().add(tag);
+            subImgLabel.setMargin(tag, new Insets(-198,0,0,-80));
+            stackList.add(subImgLabel);
+        }
+
+        return stackList;
+    }
 //    @Override
 //    public void handle(ActionEvent event)
 //    {
