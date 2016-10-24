@@ -1,0 +1,92 @@
+.root
+{
+    -fx-background-color: rgb(61, 60, 74);
+    -fx-color: #dee8f9;
+    -fx-font-size: 36pt;
+    -fx-font-family: "Helvetica Neue";
+}
+
+.button
+{
+    -fx-font-weight: bold;
+    -fx-font-size: 16pt;
+    -fx-text-fill: #558AAB;
+    -fx-border-color: #558AAB;
+    -fx-border-width: 4, 4, 4, 4;
+    -fx-background-radius: 0;
+    -fx-background-insets: 1,1,1,1;
+    -fx-padding: 15, 30, 15, 30;
+    -fx-background-color: #dee8f9;
+
+}
+
+/** CSS **/
+/* The increment and decrement button CSS class of scrollbar */
+
+.scroll-pane > .viewport
+{
+    -fx-background-color: transparent;
+}
+.scroll-pane
+{
+    -fx-background-color: transparent;
+}
+
+.scroll-bar
+{
+    -fx-font-size: 10pt;
+    -fx-background-color:transparent;
+    -fx-opacity: 0%;
+}
+.scroll-bar .increment-button ,.scroll-bar .decrement-button
+{
+    -fx-opacity: 0%;
+}
+
+/* The main scrollbar **track** CSS class  */
+.scroll-bar:horizontal .track ,
+.scroll-bar:vertical .track
+{
+    -fx-background-color: transparent;
+    -fx-border-color:derive(#dee8f9,80%);
+    -fx-background-radius: 0em;
+}
+
+/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb
+{
+    -fx-background-color:derive(white,90%);
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 0em;
+
+}
+
+/* ------------------------------------------------------------------------------------- */
+/** EVENT CSS **/
+/* ------------------------------------------------------------------------------------- */
+
+/* The main scrollbar **track** CSS class on event of "hover" and "pressed" */
+
+.scroll-bar:hover,
+.scroll-bar:pressed
+{
+    -fx-opacity:90%;
+}
+
+.scroll-bar:horizontal:hover .track ,
+.scroll-bar:horizontal:pressed .track ,
+.scroll-bar:vertical:hover .track,
+.scroll-bar:vertical:pressed .track
+{
+    -fx-background-color: derive(#dee8f9,20%);
+    -fx-opacity: 0.2;
+    -fx-background-radius: 0em;
+
+}
+
+/* The main scrollbar **thumb** CSS class on event of "hover" and "pressed" */
+.scroll-bar .thumb:pressed
+{
+    -fx-background-color:  #558AAB;
+}
