@@ -17,6 +17,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Polygon;
 import javafx.geometry.Orientation;
 import javafx.stage.Stage;
 
@@ -180,8 +183,8 @@ public class Main extends Application //implements EventHandler<ActionEvent>
             }
 
         tile.setPrefColumns(3);
-        tile.setHgap(10);
-        tile.setVgap(10);
+        tile.setHgap(20);
+        tile.setVgap(20);
         tile.setPrefTileHeight(220);
 
         right.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);    // Horizontal scroll bar
@@ -230,21 +233,27 @@ public class Main extends Application //implements EventHandler<ActionEvent>
         for(int i = 0; i < 16; i++)
         {
             StackPane subImgLabel = new StackPane();
-            Label tag = new Label("Tag");
+            Label tag = new Label("Family•");
 
             tag.setStyle("-fx-background-color: #558AAB;\n" +
                     "    -fx-text-fill: #dee8f9;\n" +
-                    "    -fx-font-size: 16pt;\n" +
+                    "    -fx-font-size: 12pt;\n" +
                     "    -fx-font-family: \"Helvetica Neue\";" +
-                    "    -fx-background-radius: 30%;" +
+                    "    -fx-background-radius: 10% 75% 75% 10%;" +
                     "    -fx-background-insets: -5, -10, -10, -5;");
+
             ImageView image = new ImageView(new Image(getClass().getResourceAsStream("ptIcon.png"), 120, 120, true, true));
             image.setFitHeight(220);
             image.setFitWidth(120);
+            image.setPreserveRatio(true);
 
             subImgLabel.getChildren().add(image);
             subImgLabel.getChildren().add(tag);
-            subImgLabel.setMargin(tag, new Insets(-198,0,0,-80));
+            subImgLabel.setStyle("-fx-background-color: #dee8f9;");
+            subImgLabel.setMinHeight(220);
+            subImgLabel.setMinWidth(120);
+            subImgLabel.setMargin(image, new Insets(0,0,0,0));
+            subImgLabel.setMargin(tag, new Insets(-180,0,0,-40));
             stackList.add(subImgLabel);
         }
 
